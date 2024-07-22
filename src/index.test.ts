@@ -1,20 +1,28 @@
 import { readFileSync } from 'fs';
 import { describe, expect, test } from '@jest/globals';
-import { runWith } from './index';
+import { robot } from '.';
 
-function exampleTest(name: string) {
-  const loadJson = (p: string) => JSON.parse(readFileSync(`${__dirname}/../examples/${name}/${p}`, 'utf8'));
+const loadJson = (name: string, p: string) => JSON.parse(readFileSync(`${__dirname}/../examples/${name}/${p}`, 'utf8'));
 
-  test(`handles walk through example "${name}"`, () => {
-    const input = loadJson('input.json');
-    const expected = loadJson('expected.json');
+describe('Given a robot', () => {
+  test('should end up in correct postion', () => {
+    const input = loadJson('01-walk-through', 'input.json');
+    const expected = loadJson('01-walk-through', 'expected.json');
 
-    expect(runWith(input)).toBe(expected);
+    expect(robot(input)).toEqual(expected);
   });
-}
 
-describe('Candidate robot', () => {
-  exampleTest('01-walk-through');
-  exampleTest('02-error');
-  exampleTest('03-crash');
+  test('should crash when hitting a wall', () => {
+    const input = loadJson('02-error', 'input.json');
+    const expected = loadJson('02-error', 'expected.json');
+
+    expect(robot(input)).toEqual(expected);
+  });
+
+  test('should return error on invalid direction', () => {
+    const input = loadJson('03-crash', 'input.json');
+    const expected = loadJson('03-crash', 'expected.json');
+
+    expect(robot(input)).toEqual(expected);
+  });
 });

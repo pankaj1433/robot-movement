@@ -14,7 +14,7 @@
     "submit": "npm run submit-package && npm run submit-send",
     "submit-package": "./scripts/package-submission.sh \"submission-${npm_config_candidate}.zip\"",
     "submit-send": "node ./scripts/submit.js \"submission-${npm_config_candidate}.zip\"",
-    "test": "jest"
+    "test": "jest --detectOpenHandles --forceExit"
   },
   "devDependencies": {
     "@jest/globals": "^29.6.1",
