@@ -25,4 +25,18 @@ describe('Given a robot', () => {
 
     expect(robot(input)).toEqual(expected);
   });
+
+  test('should handle consecutive turns', () => {
+    const input = loadJson('04-consecutive-turn', 'input.json');
+    const expected = loadJson('04-consecutive-turn', 'expected.json');
+
+    expect(robot(input)).toEqual(expected);
+  });
+
+  test('should handle no movement', () => {
+    const input = loadJson('05-no-move', 'input.json');
+    const expected = loadJson('05-no-move', 'expected.json');
+
+    expect(robot(input)).toEqual(expected);
+  });
 });

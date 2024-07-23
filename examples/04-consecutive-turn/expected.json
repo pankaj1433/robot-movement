@@ -1,0 +1,15 @@
+{
+    "status": "ok",
+    "location": {
+        "x": 0,
+        "y": 0
+    },
+    "heading": "east",
+    "path": [
+        "left",
+        "left",
+        "right",
+        "right",
+        "right"
+    ]
+}
