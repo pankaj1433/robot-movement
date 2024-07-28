@@ -1,4 +1,4 @@
-import type { InputData, Arena, Coordinates, Heading, Directions, Response } from './types';
+import type { InputData, Arena, Coordinates, Heading, Directions, Response, Obstacle } from './types';
 
 class Robot {
   private location: Coordinates;
@@ -6,19 +6,20 @@ class Robot {
   private directions: Directions[]
   private arena: Arena;
   private path: Directions[];
+  private obstacles: Obstacle[];
+  private history: { location: Coordinates; heading: Heading }[]
 
   constructor(input: InputData) {
     this.location = input.location;
     this.heading = input.heading;
     this.directions = input.directions;
     this.arena = input.arena;
+    this.obstacles = input.obstacles;
+
     this.path = [];
+    this.history = [];
   }
 
-  /**
-   * Function to check if the robot has run into the wall
-   * @param {Coordinates} newLocation
-   */
   private checkIfRanIntoWall = (newLocation: Coordinates): boolean => {
     const { corner1, corner2 } = this.arena;
 
@@ -35,9 +36,14 @@ class Robot {
     );
   }
 
-  /**
-   * Function to move the robot in the current heading direction.
-   */
+  private checkIfRanIntoObstacle = (newLocation: Coordinates): boolean => (
+    this.obstacles.some(obstacle => obstacle.x === newLocation.x && obstacle.y === newLocation.y)
+  )
+
+  private updateHistory = () => {
+    this.history.push({ location: { ...this.location }, heading: this.heading });
+  }
+
   private moveRobot = () => {
     const newLocation = { ...this.location };
     switch (this.heading) {
@@ -64,14 +70,22 @@ class Robot {
       });
     }
 
-    this.location = { ...newLocation };
+    if (this.obstacles.length > 0) {
+      if (!this.checkIfRanIntoObstacle(newLocation)) {
+        throw ({
+          status: 'obstacle',
+          location: this.location,
+          heading: this.heading,
+          path: this.path
+        });
+      }
+    }
+
+    this.updateHistory();
+    this.location = newLocation;
   }
 
-  /**
-   * Function to change the robot's direction
-   * @param {Exclude<Directions, 'forward'>} direction
-   */
-  private changeDirection = (direction: Exclude<Directions, 'forward'>) => {
+  private changeDirection = (direction: Exclude<Directions, 'forward' | 'undo'>) => {
     const headings: { [key in Heading]: { left: Heading; right: Heading } } = {
       north: { left: 'west', right: 'east' },
       east: { left: 'north', right: 'south' },
@@ -79,13 +93,27 @@ class Robot {
       west: { left: 'south', right: 'north' },
     };
 
+    this.updateHistory();
     this.heading = headings[this.heading][direction];
   }
 
-  /**
-   * Function to run the robot on each direction input
-   * @param {Directions} direction 
-   */
+  private undo = () => {
+    if (this.history.length <= 0) {
+      throw ({
+        status: 'can\'t undo',
+        location: this.location,
+        heading: this.heading,
+        path: this.path
+      });
+    }
+
+    const previousState = this.history.pop();
+    if (previousState) {
+      this.location = previousState.location;
+      this.heading = previousState.heading
+    }
+  }
+
   private run = (direction: Directions) => {
     this.path.push(direction);
 
@@ -97,6 +125,9 @@ class Robot {
       case "right":
         this.changeDirection(direction)
         break;
+      case "undo":
+        this.undo();
+        break;
       default:
         throw {
           status: 'error',
@@ -107,10 +138,6 @@ class Robot {
     }
   }
 
-  /**
-   * Function to execute the robot
-   * @returns {Response} response
-   */
   public execute = (): Response => {
     try {
       this.path = [];

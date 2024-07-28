@@ -1,5 +1,6 @@
 export type Heading = 'north' | 'south' | 'east' | 'west';
-export type Directions = 'forward' | 'left' | 'right';
+export type Directions = 'forward' | 'left' | 'right' | 'undo';
+export type Obstacle = Coordinates;
 
 export type Coordinates = {
   x: number;
@@ -16,6 +17,7 @@ export type InputData = {
   location: Coordinates;
   heading: Heading;
   directions: Directions[];
+  obstacles: Obstacle[];
 };
 
 // Response Types.

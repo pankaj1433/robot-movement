@@ -14,5 +14,6 @@
         "y": 0
     },
     "heading": "north",
-    "directions": []
+    "directions": [],
+    "obstacles": []
 }
