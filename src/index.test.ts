@@ -39,4 +39,25 @@ describe('Given a robot', () => {
 
     expect(robot(input)).toEqual(expected);
   });
+
+  test('should handle backward movement', () => {
+    const input = loadJson('06-walk-backward', 'input.json');
+    const expected = loadJson('06-walk-backward', 'expected.json');
+
+    expect(robot(input)).toEqual(expected);
+  });
+
+  test('should handle backward movement with crash', () => {
+    const input = loadJson('07-walk-backward-crash', 'input.json');
+    const expected = loadJson('07-walk-backward-crash', 'expected.json');
+
+    expect(robot(input)).toEqual(expected);
+  });
+
+  test('should handle repetition in direction', () => {
+    const input = loadJson('07-walk-backward-crash', 'input.json');
+    const expected = loadJson('07-walk-backward-crash', 'expected.json');
+
+    expect(robot(input)).toEqual(expected);
+  });
 });

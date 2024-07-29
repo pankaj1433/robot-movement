@@ -1,5 +1,7 @@
 export type Heading = 'north' | 'south' | 'east' | 'west';
-export type Directions = 'forward' | 'left' | 'right';
+export type Directions = 'forward' | 'left' | 'right' | 'backward';
+
+export type DirectionExtended = `${Directions}(${number})` | Directions
 
 export type Coordinates = {
   x: number;
@@ -15,7 +17,7 @@ export type InputData = {
   arena: Arena;
   location: Coordinates;
   heading: Heading;
-  directions: Directions[];
+  directions: DirectionExtended[];
 };
 
 // Response Types.

@@ -1,0 +1,11 @@
+{
+  "status": "crash",
+  "location": {
+    "x": -3,
+    "y": -3
+  },
+  "heading": "north",
+  "path": [
+    "backward"
+  ]
+}
